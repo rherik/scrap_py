@@ -1,0 +1,4 @@
+requests
+types-requests
+bs4
+
