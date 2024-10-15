@@ -14,16 +14,27 @@ class MeuTexto:
             self.response = requests.get(self.url)
             self.raw_html = self.response.text
             # Pesquisar com expressões regulares
-            self.parsed_html = soup(self.raw_html, "html.parser")
-
+            self.parsed_html = self.texto(self.raw_html, "html.parser")
 
     def retorna_texto(self):
-        for tag in self.parsed_html.find_all(re.findall(r"p")):
-            print(tag)
-            sleep(10)
-        #print(self.parsed_html.find_all(string=re.compile("Errar")))
+        """
+        Retorna o texto formatado da página web.
+        Referencia: div>single-content
+        """
+        search_index = self.parsed_html.find_all("div")[6]
+        search_class_formated_text = self.parsed_html.find("div", class_='single-content').text
+        # for tag in self.parsed_html.find_all(re.findall(r"<p>", "Marcelle")):
+        #     print(tag)
+        #     sleep(1)
+        #print(self.parsed_html.find(string=re.compile("p")).text)
+        # print(self.parsed_html.find("p").text.strip())
+        # print(self.parsed_html.find(re.findall(r"Alexandre")).text.strip())
+    
+        return self.parsed_html.find("div", class_='single-content').text
 
     def digito_arquivo(self):
+        """
+        """
         if not os.path.isdir("textos"):
             os.mkdir('textos')
         else:
@@ -40,9 +51,13 @@ class MeuTexto:
                     return novo_nome_arquivo
 
     def cria_txt(self, text, novo_arquivo):
+        """
+        Cria um novo arquivo com o texto extraído
+        """
         with open(novo_arquivo, "w+", encoding="utf8", newline="") as file:
             file.write(text)
 
-url = "https://www.intercept.com.br/2023/10/12/errar-e-humano-exceto-para-pessoas-negras/"
-texto_intercept = MeuTexto(url)
-texto_intercept.retorna_texto()
+if __name__ == "__main__":
+    url = "https://www.intercept.com.br/2024/10/12/twitter-voltou/"
+    texto_intercept = MeuTexto(url)
+    print(texto_intercept.retorna_texto())
